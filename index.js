@@ -1,20 +1,29 @@
 /*jslint node: true, indent: 4 */
-/* global module,console */
+
 (function () {
     'use strict';
     var httpAccess = require('./httpAccess'),
         infoStruct = require('./jsonStruct'),
         makeInfoFileMan = require('./makeInfoFile'),
-        setting = require('../ownCookingSetting.js'),
 
-        makeInfoFile = makeInfoFileMan.setBasePath(setting.basePath);
+        exportsIF = {};
 
-    function booklogData(obj) {
+    function booklogData(makeInfoFile, obj) {
         infoStruct(obj).forEachBook(function (bookInfo) {
             makeInfoFile(bookInfo);
         });
     }
-    module.exports = {
-        get: httpAccess.get.bind(null, booklogData)
+
+    exportsIF.genBookLogFolders = function (param) {
+        var makeInfoFile;
+
+        makeInfoFile = makeInfoFileMan.init({
+            basePath: param.basePath
+        });
+
+        httpAccess.get(booklogData.bind(null, makeInfoFile));
     };
+
+    module.exports = exportsIF;
+
 }());
