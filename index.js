@@ -4,24 +4,24 @@
     'use strict';
     var httpAccess = require('./httpAccess'),
         infoStruct = require('./jsonStruct'),
-        makeInfoFileMan = require('./makeInfoFile'),
+        infoFileMan = require('./infoFileManager'),
 
         exportsIF = {};
 
-    function booklogData(makeInfoFile, obj) {
+    function booklogData(infoFolders, obj) {
         infoStruct(obj).forEachBook(function (bookInfo) {
-            makeInfoFile(bookInfo);
+            infoFolders(bookInfo);
         });
     }
 
     exportsIF.genBookLogFolders = function (param) {
-        var makeInfoFile;
+        var infoFolders;
 
-        makeInfoFile = makeInfoFileMan.init({
+        infoFolders = infoFileMan.init({
             basePath: param.basePath
         });
 
-        httpAccess.get(booklogData.bind(null, makeInfoFile));
+        httpAccess.get(booklogData.bind(null, infoFolders));
     };
 
     module.exports = exportsIF;
