@@ -16,7 +16,7 @@
     }
     */
 
-    fsFolderMan　= (function () {
+    fsFolderMan = (function () {
         var badAlphabet = '/:*?"<>|\\.~',
             goodAlphabet = '／：＊？”＜＞|＼．～',
             badAlphabetSize = badAlphabet.length,
