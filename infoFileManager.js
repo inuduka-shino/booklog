@@ -4,6 +4,7 @@
     'use strict';
     var fs = require('fs'),
         fsFolderMan,
+        genInfoFolder,
 
         exportIF;
 
@@ -61,6 +62,17 @@
         function fileName(ctxtIF) {
             return ctxtIF.fileName;
         }
+        function exist(ctxtIF, handler) {
+            fs.exists(ctxtIF.folderPath, function (exists) {
+                if (exists === true) {
+                    handler.success(true);
+                } else if (exists === false) {
+                    handler.success(false);
+                } else {
+                    handler.fail(exists);
+                }
+            });
+        }
         function writeInfo(ctxtIF, contents, handler) {
             var infoFilePath = ctxtIF.infoFilePath;
 
@@ -93,10 +105,65 @@
             return {
                 makeFolder: makeFolder.bind(undefined, ctxtIF),
                 fileName: fileName.bind(undefined, ctxtIF),
-                writeInfo: writeInfo.bind(undefined, ctxtIF)
+                writeInfo: writeInfo.bind(undefined, ctxtIF),
+                exist: exist.bind(undefined, ctxtIF)
             };
         }
         return fsFolderManImpl;
+    }());
+
+    genInfoFolder = (function () {
+
+        function exist(ctxtIFD, handler) {
+            return ctxtIFD.fsFolder.exist(handler);
+        }
+
+        function makeFolder(ctxtIFD, handler) {
+            var fsFolder = ctxtIFD.fsFolder;
+
+            fsFolder.makeFolder({
+                success: function () {
+                    var info;
+
+                    info = '[booklogInfo]\n';
+                    info += 'ISBN:' + ctxtIFD.isbn + '\n'; //本当はASIN
+                    info += 'タイトル:' + ctxtIFD.title + '\n';
+                    info += '著者:' + ctxtIFD.author + '\n';
+                    info += 'ファイル名:' + fsFolder.fileName() + '\n';
+
+                    fsFolder.writeInfo(info, {
+                        success: function () {
+                            handler.success();
+                        },
+                        fail: function (err) {
+                            handler.fail('writeInfo Error ! \n' + err);
+                        }
+                    });
+                },
+                fail: function (err) {
+                    handler.fail('makeFolder Error ! \n' + err);
+                }
+            });
+        }
+
+        function genInfoFolderImpl(ctxtIFS, bookInfo) {
+            var fsFolder = fsFolderMan({
+                    basePath: ctxtIFS.basePath,
+                    title: bookInfo.title
+                }),
+                ctxtIFD = {
+                    fsFolder: fsFolder,
+                    isbn: bookInfo.isbn,
+                    title: bookInfo.title,
+                    author: bookInfo.author
+                };
+
+            return {
+                exist: exist.bind(undefined, ctxtIFD),
+                makeFolder: makeFolder.bind(undefined, ctxtIFD)
+            };
+        }
+        return genInfoFolderImpl;
     }());
 
     function makeFolder(ctxtIFS, bookInfo, handler) {
@@ -104,8 +171,7 @@
                 basePath: ctxtIFS.basePath,
                 title: bookInfo.title
             }),
-            info,
-            ret = true;
+            info;
 
         fsFolder.makeFolder({
             success: function () {
@@ -129,7 +195,6 @@
             }
         });
 
-        return ret;
     }
 
     function makeInfoFolders(param) {
@@ -138,7 +203,8 @@
         };
 
         return {
-            makeFolder: makeFolder.bind(undefined, ctxtIFS)
+            makeFolder: makeFolder.bind(undefined, ctxtIFS),
+            infoFolder: genInfoFolder.bind(undefined, ctxtIFS)
         };
     }
 

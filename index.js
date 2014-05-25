@@ -14,13 +14,26 @@
 
     function booklogData(infoFolders, obj) {
         infoStruct(obj).forEachBook(function (bookInfo) {
-            infoFolders.makeFolder(bookInfo, {
-                success: function () {
-                    message('gen file:' + bookInfo.title);
+            var infoFolder = infoFolders.infoFolder(bookInfo);
+
+            infoFolder.exist({
+                success: function (exist) {
+                    if (exist) {
+                        message('exist file:' + bookInfo.title);
+                    } else {
+                        infoFolder.makeFolder({
+                            success: function () {
+                                message('gen file:' + bookInfo.title);
+                            },
+                            fail: function () {
+                                message('gen file Error bookInfo Folder:' + bookInfo.title);
+                                //message(err);
+                            }
+                        });
+                    }
                 },
-                fail: function (err) {
-                    message('gen file Error bookInfo Folder:' + bookInfo.title);
-                    //message(err);
+                fail: function () {
+                    message('file Access Error!:' + bookInfo.title);
                 }
             });
         });
