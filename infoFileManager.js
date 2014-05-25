@@ -2,78 +2,148 @@
 /* global module,console */
 (function () {
     'use strict';
-    var
-        fs = require('fs'),
-        badAlphabet = '/:*?"<>|\\.~',
-        goodAlphabet = '／：＊？”＜＞|＼．～',
-        badAlphabetSize = badAlphabet.length,
-        fileInfoName = 'xinfo.txt',
-        exportIF = {};
-        
-    module.exports = exportIF;
+    var fs = require('fs'),
+        fsFolderMan,
 
-    function transFilename(fn) {
-        var i, j, c, cc,
-            fnSize = fn.length,
-            newFn = '';
-        fn = fn.trim();
-        for (i = 0; i < fnSize; i += 1) {
-            c = fn[i];
-            cc = undefined;
-            for (j = 0; j < badAlphabetSize; j += 1) {
-                if (c === badAlphabet[j]) {
-                    cc = goodAlphabet[j];
+        exportIF;
+
+    module.exports = exportIF = {};
+
+    /*
+    function trace(s) {
+        console.log('trace>' + s);
+    }
+    */
+
+    fsFolderMan　= (function () {
+        var badAlphabet = '/:*?"<>|\\.~',
+            goodAlphabet = '／：＊？”＜＞|＼．～',
+            badAlphabetSize = badAlphabet.length,
+            fileInfoName = 'xinfo.txt';
+
+        function transFilename(fn) {
+            var i, j, c, cc,
+                fnSize = fn.length,
+                newFn = '';
+            fn = fn.trim();
+            for (i = 0; i < fnSize; i += 1) {
+                c = fn[i];
+                cc = undefined;
+                for (j = 0; j < badAlphabetSize; j += 1) {
+                    if (c === badAlphabet[j]) {
+                        cc = goodAlphabet[j];
+                    }
+                }
+                if (cc === undefined) {
+                    newFn += c;
+                } else {
+                    newFn += cc;
                 }
             }
-            if (cc === undefined) {
-                newFn += c;
-            } else {
-                newFn += cc;
-            }
+            return newFn;
         }
-        return newFn;
-    }
 
-    function makeInfoFile(basePath, bookInfo) {
-        var path, title, fileName, infoFilePath, info;
 
-        title = bookInfo.title;
-        fileName = transFilename(title);
-        bookInfo.folderName = fileName;
-        path = basePath + '/' + fileName;
-        infoFilePath = path + '/' + fileInfoName;
-        // console.log(transFilename(badAlphabet));
-        // console.log(path);
-        // console.log(bookInfo);
-        fs.mkdir(path, function (err) {
-            if (err) {
-                console.log('mkdir error!:' + path);
-                console.log(err);
-                //throw (err);
-            } else {
+        function makeFolder(ctxtIF, handler) {
+            var path = ctxtIF.folderPath;
+            fs.mkdir(path, function (err) {
+                var error;
+                if (err) {
+                    error = 'mkdir error!:' + path;
+                    //console.log(error);
+                    //console.log(err);
+                    handler.fail(error);
+                } else {
+                    handler.success();
+                }
+            });
+        }
+        function fileName(ctxtIF) {
+            return ctxtIF.fileName;
+        }
+        function writeInfo(ctxtIF, contents, handler) {
+            var infoFilePath = ctxtIF.infoFilePath;
+
+            fs.writeFile(infoFilePath, contents, function (err) {
+                var error;
+                if (err) {
+                    error = 'write file error!:' + infoFilePath;
+                    console.log(error);
+                    console.log(err);
+                    handler.fail(error);
+                } else {
+                    // console.log('gen file:' + bookInfo.title);
+                    handler.success();
+                }
+            });
+        }
+
+
+        function fsFolderManImpl(param) {
+            var ctxtIF = {},
+                path,
+                fn;
+
+            ctxtIF.fileName =
+                fn = transFilename(param.title);
+            ctxtIF.folderPath =
+                path = param.basePath + '/' + fn;
+            ctxtIF.infoFilePath = path + '/' + fileInfoName;
+
+            return {
+                makeFolder: makeFolder.bind(undefined, ctxtIF),
+                fileName: fileName.bind(undefined, ctxtIF),
+                writeInfo: writeInfo.bind(undefined, ctxtIF)
+            };
+        }
+        return fsFolderManImpl;
+    }());
+
+    function makeFolder(ctxtIFS, bookInfo, handler) {
+        var fsFolder = fsFolderMan({
+                basePath: ctxtIFS.basePath,
+                title: bookInfo.title
+            }),
+            info,
+            ret = true;
+
+        fsFolder.makeFolder({
+            success: function () {
                 info = '[booklogInfo]\n';
                 info += 'ISBN:' + bookInfo.isbn + '\n'; //本当はASIN
                 info += 'タイトル:' + bookInfo.title + '\n';
                 info += '著者:' + bookInfo.author + '\n';
-                info += 'フォルダ名:' + bookInfo.folderName + '\n';
+                info += 'ファイル名:' + fsFolder.fileName() + '\n';
 
-                fs.writeFile(infoFilePath, info, function (err) {
-                    if (err) {
-                        console.log('write file error!:' + infoFilePath);
-                        console.log(err);
-                        //throw (err);
-                    } else {
-                        console.log('gen file:' + bookInfo.title);
+                fsFolder.writeInfo(info, {
+                    success: function () {
+                        handler.success();
+                    },
+                    fail: function (err) {
+                        handler.fail('writeInfo Error ! \n' + err);
                     }
                 });
+            },
+            fail: function (err) {
+                handler.fail('makeFolder Error ! \n' + err);
             }
         });
+
+        return ret;
     }
-    function genManager(param) {
+
+    function makeInfoFolders(param) {
+        var ctxtIFS = {
+            basePath: param.basePath
+        };
+
+        return {
+            makeFolder: makeFolder.bind(undefined, ctxtIFS)
+        };
     }
-    
-    exportIF.init = function (pram) {
-        return genManager(param);
-    }
+
+    exportIF.init = function (param) {
+        return makeInfoFolders(param);
+    };
 
 }());
