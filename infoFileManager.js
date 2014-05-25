@@ -7,7 +7,10 @@
         badAlphabet = '/:*?"<>|\\.~',
         goodAlphabet = '／：＊？”＜＞|＼．～',
         badAlphabetSize = badAlphabet.length,
-        fileInfoName = 'xinfo.txt';
+        fileInfoName = 'xinfo.txt',
+        exportIF = {};
+        
+    module.exports = exportIF;
 
     function transFilename(fn) {
         var i, j, c, cc,
@@ -66,11 +69,11 @@
             }
         });
     }
-    function setBasePath(basePath) {
-        return makeInfoFile.bind(null, basePath);
+    function genManager(param) {
+    }
+    
+    exportIF.init = function (pram) {
+        return genManager(param);
     }
 
-    module.exports = {
-        setBasePath: setBasePath
-    };
 }());
