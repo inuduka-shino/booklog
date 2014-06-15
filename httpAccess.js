@@ -3,35 +3,20 @@
 (function () {
     'use strict';
     var http = require('http');
-    /*
-        urlParamList = [
-            '&count=98',
-            '&count=99',
-            '&count=100',
-            '&count=101'
-        ],
-        urlParamListSize = urlParamList.length,
-        i;
-    function genUrlParam() {
-        var ii = (typeof i === 'number') ? (i % urlParamListSize) : 0,
-            urlParam = urlParamList[ii];
-        i = ii + 1;
-        return urlParam;
-    }
-    */
     function get(cntxt, func) {
         var
             count = cntxt.count,
             userId = cntxt.userId,
+            urlPath = '/json/' + userId + '?status=2&count=' + count,
 
             req;
 
+        console.log('access to booklog api:' + urlPath);
         req = http.request(
             {
                 host: 'api.booklog.jp',
                 port: 80,
-                //path: '/json/maskinkk?status=2&count=' + count,
-                path: '/json/' + userId + '?status=2&count=' + count,
+                path: urlPath,
                 method: 'GET'
             },
             function (res) {
