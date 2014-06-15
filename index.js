@@ -40,13 +40,17 @@
     }
 
     exportsIF.genBookLogFolders = function (param) {
-        var infoFolders;
+        var infoFolders,
+            bklogAccess;
 
         infoFolders = infoFileMan.init({
             basePath: param.basePath
         });
+        bklogAccess = httpAccess({
+            userId: param.userId
+        });
 
-        httpAccess.get(booklogData.bind(null, infoFolders));
+        bklogAccess.get(booklogData.bind(null, infoFolders));
     };
 
     module.exports = exportsIF;
