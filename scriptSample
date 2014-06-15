@@ -1,6 +1,7 @@
 #!/usr/local/bin/node
 (function () {
     "use strict";
+    // TODO extendArgs を直接　./booklog のメソッドに
     var extendArgs = require('./booklog/argsCtrl').extendArgs,
         param = extendArgs({
             userId: 'xxxx',
