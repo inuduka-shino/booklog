@@ -2,17 +2,16 @@
 /* global module,console */
 (function () {
     'use strict';
-    function forEachBook(rowObj, func) {
-        var books = rowObj.books,
-            booksSize = rowObj.books.length,
-            book,
+
+    function forEachBook(cntxt, func) {
+        var books = cntxt.books,
+            booksNum = cntxt.booksNum,
             i,
-            ret;
-        for (i = 0; i < booksSize; i += 1) {
+            ret,
+            book;
+
+        for (i = 0; i < booksNum; i += 1) {
             book = books[i];
-            if (book.id === undefined) {
-                break;
-            }
             ret = func({
                 id: book.id,
                 isbn: book.asin,
@@ -24,9 +23,29 @@
             }
         }
     }
-    module.exports = function (rowObj) {
+    function size(cntxt) {
+        // console.log('jsonStruct trace:' + cntxt.booksNum);
+        return cntxt.booksNum;
+    }
+    function genJsonStruct(rowObj) {
+        var cntxt = {},
+            books = rowObj.books,
+            len = rowObj.books.length,
+            i;
+
+        cntxt.books = books;
+        for (i = 0; i < len; i += 1) {
+            if (books[i].id === undefined) {
+                cntxt.booksNum = i;
+                break;
+            }
+        }
+
         return {
-            forEachBook: forEachBook.bind(null, rowObj)
+            size: size.bind(null, cntxt),
+            forEachBook: forEachBook.bind(null, cntxt)
         };
-    };
+    }
+
+    module.exports = genJsonStruct;
 }());
