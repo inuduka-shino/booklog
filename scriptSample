@@ -1,13 +1,13 @@
 #!/usr/local/bin/node
 (function () {
     "use strict";
-    var args = require('./argsCtrl');
+    var extendArgs = require('./booklog/argsCtrl').extendArgs,
+        param = extendArgs({
+            userId: 'xxxx',
+            basePath: '/xxxx/xxx/xxxxxx'
+        });
 
-    require('./booklog').genBookLogFolders({
-        userId: 'xxxxx',
-        basePath: 'xxxxxxxx',
-        count: args.count()
-    });
+    require('./booklog').genBookLogFolders(param);
 }());
 
 
