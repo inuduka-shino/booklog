@@ -52,7 +52,7 @@
         });
 
         bklogAccess.get(booklogData.bind(null, infoFolders));
-        message('command exit');
+        // message('command exit');
     };
 
     module.exports = exportsIF;
