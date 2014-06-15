@@ -14,7 +14,13 @@
     }
 
     function booklogData(infoFolders, obj) {
-        infoStruct(obj).forEachBook(function (bookInfo) {
+        var iStruct = infoStruct(obj);
+        //message('booklogData');
+        if (iStruct.size() === 0) {
+            message('no enty!');
+            return;
+        }
+        iStruct.forEachBook(function (bookInfo) {
             var infoFolder = infoFolders.infoFolder(bookInfo);
 
             infoFolder.exist({
