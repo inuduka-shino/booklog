@@ -51,6 +51,8 @@
             userId: param.userId
         });
 
+        bklogAccess.setCount(param.count);
+
         bklogAccess.get(booklogData.bind(null, infoFolders));
         // message('command exit');
     };

@@ -20,7 +20,7 @@
             argStruct;
 
         argStruct = arg.split(':');
-        type = argStruct[0].toUpper();
+        type = (argStruct[0]).toUpperCase();
         val = argStruct[1];
 
         return {
