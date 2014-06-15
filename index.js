@@ -3,8 +3,6 @@
 (function () {
     'use strict';
     var
-        config = require('config'),
-
         httpAccess = require('./httpAccess'),
         infoStruct = require('./jsonStruct'),
         infoFileMan = require('./infoFileManager'),
@@ -43,19 +41,18 @@
     }
 
     exportsIF.genBookLogFolders = function (param) {
-        var infoFolders;
-
-        message("config test:" + config.test)
-        message("basePath test:" + config.basePath)
+        var infoFolders,
+            bklogAccess;
 
         infoFolders = infoFileMan.init({
-            //basePath: param.basePath
-            basePath: config.basePath
+            basePath: param.basePath
+        });
+        bklogAccess = httpAccess({
+            userId: param.userId
         });
 
-        httpAccess.get(booklogData.bind(null, infoFolders));
+        bklogAccess.get(booklogData.bind(null, infoFolders));
         message('command exit');
-
     };
 
     module.exports = exportsIF;
