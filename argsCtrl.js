@@ -39,7 +39,9 @@
 
             switch (type) {
             case 'C':
+            case 'COUNT':
                 count = val;
+                // console.log('set Count:' + val);
                 break;
             }
         });
