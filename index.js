@@ -6,8 +6,10 @@
         httpAccess = require('./httpAccess'),
         infoStruct = require('./jsonStruct'),
         infoFileMan = require('./infoFileManager'),
+        processArgs = require('./processArgs'),
 
         exportsIF = {};
+
 
     function message(s) {
         console.log(s);
@@ -46,7 +48,7 @@
         });
     }
 
-    exportsIF.genBookLogFolders = function (param) {
+    function genBookLogFolders(param) {
         var infoFolders,
             bklogAccess;
 
@@ -61,6 +63,16 @@
 
         bklogAccess.get(booklogData.bind(null, infoFolders));
         // message('command exit');
+    }
+
+    exportsIF.setParam = function (param0) {
+        var param;
+
+        param = processArgs(param0);
+
+        return {
+            genBookLogFolders:  genBookLogFolders.bind(null, param)
+        };
     };
 
     module.exports = exportsIF;

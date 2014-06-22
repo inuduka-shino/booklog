@@ -29,8 +29,17 @@
         };
     }
     function extendArgs(param) {
-        var count = 100;
+        var defaultCount = 100,
 
+            userId = param.userId,
+            basePath = param.basePath,
+            count = param.count;
+
+        if (count === undefined) {
+            count = defaultCount;
+        }
+
+        // コマンド引数　優先
         loopArgs(function (arg) {
             var
                 prs = parseArg(arg),
@@ -47,12 +56,11 @@
         });
 
         return {
-            userId:   param.userId,
-            basePath: param.basePath,
+            userId:   userId,
+            basePath: basePath,
             count: count
         };
     }
-    module.exports = {
-        extendArgs: extendArgs
-    };
+
+    module.exports =  extendArgs;
 }());
