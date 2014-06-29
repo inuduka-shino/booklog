@@ -1,8 +1,9 @@
 #!/usr/local/bin/node
-(function () {
+(function (args) {
     "use strict";
     require('./booklog')
-        .setParam({
+        .setting({
+            args: process.argv,
             userId: 'xxxx',
             basePath: '/xxxx/xxx/xxxxxx'
         })

@@ -65,7 +65,7 @@
         // message('command exit');
     }
 
-    exportsIF.setParam = function (param0) {
+    exportsIF.setting = function (param0) {
         var param;
 
         param = setting(param0);
