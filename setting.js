@@ -28,7 +28,7 @@
             val: val
         };
     }
-    function extendArgs(param) {
+    function setting(param) {
         var defaultCount = 100,
 
             userId = param.userId,
@@ -62,5 +62,5 @@
         };
     }
 
-    module.exports =  extendArgs;
+    module.exports =  setting;
 }());
