@@ -2,7 +2,7 @@
 (function () {
     "use strict";
     require('./booklog')
-        .setParam({
+        .setting({
             userId: 'xxxx',
             basePath: '/xxxx/xxx/xxxxxx'
         })

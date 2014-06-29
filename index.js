@@ -6,7 +6,7 @@
         httpAccess = require('./httpAccess'),
         infoStruct = require('./jsonStruct'),
         infoFileMan = require('./infoFileManager'),
-        processArgs = require('./processArgs'),
+        setting = require('./setting'),
 
         exportsIF = {};
 
@@ -65,10 +65,10 @@
         // message('command exit');
     }
 
-    exportsIF.setParam = function (param0) {
+    exportsIF.setting = function (param0) {
         var param;
 
-        param = processArgs(param0);
+        param = setting(param0);
 
         return {
             genBookLogFolders:  genBookLogFolders.bind(null, param)
