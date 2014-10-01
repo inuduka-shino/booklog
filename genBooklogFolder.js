@@ -2,8 +2,7 @@
 
 var httpAccess = require('./httpAccess'),
     infoStruct = require('./jsonStruct'),
-    infoFileMan = require('./infoFileManager'),
-    setting = require('./setting');
+    infoFileMan = require('./infoFileManager');
 
 module.exports = (function () {
     'use strict';
@@ -45,7 +44,7 @@ module.exports = (function () {
         });
     }
 
-    function genBookLogFolders(param) {
+    return function (param) {
         var infoFolders,
             bklogAccess;
 
@@ -60,17 +59,6 @@ module.exports = (function () {
 
         bklogAccess.get(booklogData.bind(null, infoFolders));
         // message('command exit');
-    }
-
-
-    return {
-        setting: function (param0) {
-            var param;
-            param = setting(param0);
-            return {
-                genBookLogFolders:  genBookLogFolders.bind(null, param)
-            };
-        }
-
     };
+
 }());

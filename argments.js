@@ -1,6 +1,7 @@
 /*jslint node: true, indent: 4 */
 /* global module,console */
-(function () {
+
+module.exports = (function () {
     'use strict';
 
     function loopArgs(func) {
@@ -28,7 +29,7 @@
             val: val
         };
     }
-    function setting(param) {
+    return function (param) {
         var defaultCount = 100,
 
             userId = param.userId,
@@ -60,7 +61,5 @@
             basePath: basePath,
             count: count
         };
-    }
-
-    module.exports =  setting;
+    };
 }());
