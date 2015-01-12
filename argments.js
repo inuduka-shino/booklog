@@ -29,12 +29,14 @@ module.exports = (function () {
             val: val
         };
     }
-    return function (param) {
+    return function (settingPath) {
         var defaultCount = 100,
+            param = require(settingPath + 'booklog.js'),
 
             userId = param.userId,
             basePath = param.basePath,
             count = param.count;
+        console.log(param);
 
         if (count === undefined) {
             count = defaultCount;
