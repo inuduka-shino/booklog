@@ -1,6 +1,7 @@
 /*jslint node: true, indent: 4 */
 /* global module,console */
-(function () {
+
+module.exports = (function () {
     'use strict';
 
     function loopArgs(func) {
@@ -28,12 +29,14 @@
             val: val
         };
     }
-    function setting(param) {
+    return function (settingPath) {
         var defaultCount = 100,
+            param = require(settingPath + 'booklog.js'),
 
             userId = param.userId,
             basePath = param.basePath,
             count = param.count;
+        console.log(param);
 
         if (count === undefined) {
             count = defaultCount;
@@ -60,7 +63,5 @@
             basePath: basePath,
             count: count
         };
-    }
-
-    module.exports =  setting;
+    };
 }());

@@ -1,12 +1,10 @@
 #!/usr/local/bin/node
 (function () {
     "use strict";
-    require('./booklog')
-        .setting({
-            userId: 'xxxx',
-            basePath: '/xxxx/xxx/xxxxxx'
-        })
-        .genBookLogFolders();
+    require('./booklog')({
+        userId: 'xxxx',
+        basePath: '/xxxx/xxx/xxxxxx'
+    }).genBookLogFolders();
 }());
 
 
