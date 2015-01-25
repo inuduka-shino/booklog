@@ -2,9 +2,11 @@
 /* global module,console */
 (function () {
     'use strict';
-    var http = require('http');
+    var http = require('http'),
+        jQuery = require('jquery-deferred');
     function get(cntxt, func) {
         var
+            dfr = jQuery.Deferred(),
             count = cntxt.count,
             userId = cntxt.userId,
             urlPath = '/json/' + userId + '?status=2&count=' + count,
@@ -28,12 +30,20 @@
                         dataPool += chunk;
                     });
                     res.on('end', function () {
-                        func(JSON.parse(dataPool));
+                        var dataInfo = JSON.parse(dataPool);
+                        if (func !== undefined) {
+                            func(dataInfo);
+                        }
+                        dfr.resolve(dataInfo);
                     });
                 } else {
                     console.log('bad response.');
                     console.log('STATUS: ' + res.statusCode);
                     console.log('HEADERS: ' + JSON.stringify(res.headers));
+                    dfr.reject({
+                        status: res.statusCode,
+                        headers: JSON.stringify(res.headers)
+                    });
                 }
             }
         );
@@ -44,6 +54,7 @@
 
         req.end();
 
+        return dfr.promise();
     }
 
     function setCount(cntxt, count) {

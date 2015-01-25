@@ -15,7 +15,8 @@ module.exports = (function () {
          });
 
         return {
-            genFolder: bfc.genFolder
+            genFolder: bfc.genFolder,
+            genFolderAsync: bfc.genFolderAsync,
         };
     };
 }());

@@ -57,14 +57,29 @@ module.exports = (function () {
 
         bklogAccess.setCount(param.defaultCount);
 
+        function genFolderAsync(bklogAccessCount) {
+            var ret;
+            if (bklogAccessCount !== undefined) {
+                bklogAccess.setCount(bklogAccessCount);
+            }
+            ret = bklogAccess.get()
+                .then(function (bklogInfo) {
+                    booklogData(infoFolders, bklogInfo);
+                })
+                .promise();
+            // message('command exit');
+
+            return ret;
+        }
+
         return {
             genFolder: function (bklogAccessCount) {
                 if (bklogAccessCount !== undefined) {
                     bklogAccess.setCount(bklogAccessCount);
                 }
                 bklogAccess.get(booklogData.bind(null, infoFolders));
-                // message('command exit');
-            }
+            },
+            genFolderAsync: genFolderAsync
         };
     };
 
