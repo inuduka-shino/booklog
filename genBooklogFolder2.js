@@ -59,6 +59,7 @@ module.exports = (function () {
 
         function genFolderAsync(bklogAccessCount) {
             var ret;
+            //console.log('genFolderAsync');
             if (bklogAccessCount !== undefined) {
                 bklogAccess.setCount(bklogAccessCount);
             }
