@@ -13,7 +13,7 @@
 
             req;
 
-        console.log('access to booklog api:' + urlPath);
+        //console.log('access to booklog api:' + urlPath);
         req = http.request(
             {
                 host: 'api.booklog.jp',
@@ -41,6 +41,7 @@
                     console.log('STATUS: ' + res.statusCode);
                     console.log('HEADERS: ' + JSON.stringify(res.headers));
                     dfr.reject({
+                        error: 'bad response',
                         status: res.statusCode,
                         headers: JSON.stringify(res.headers)
                     });
@@ -50,6 +51,11 @@
 
         req.on('error', function (e) {
             console.log('access Error with HTTP request: ' + e.message);
+            dfr.reject({
+                error: 'access error',
+                message: e.message,
+                exception: e
+            });
         });
 
         req.end();
