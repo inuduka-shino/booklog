@@ -10,13 +10,14 @@
             count = cntxt.count,
             userId = cntxt.userId,
             urlPath = '/json/' + userId + '?status=2&count=' + count,
+            booklogHost = 'api.booklog.jp',
 
             req;
 
-        //console.log('access to booklog api:' + urlPath);
+        console.log('access to booklog api:' + 'http://' + booklogHost + ':' +urlPath);
         req = http.request(
             {
-                host: 'api.booklog.jp',
+                host: booklogHost,
                 port: 80,
                 path: urlPath,
                 method: 'GET'
