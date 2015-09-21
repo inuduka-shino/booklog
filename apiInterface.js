@@ -1,6 +1,6 @@
 /*jslint node: true, indent: 4 */
 
-var booklogFolderCtrl = require('./genBooklogFolder3'),
+var booklogFolderCtrl = require('./genBooklogFolder2'),
     setting_booklog = require('../setting/setting_booklog');
 
 module.exports = (function () {
