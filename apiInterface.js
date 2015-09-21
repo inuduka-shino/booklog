@@ -1,6 +1,6 @@
 /*jslint node: true, indent: 4 */
 
-var booklogFolderCtrl = require('./genBooklogFolder2'),
+var booklogFolderCtrl = require('./genBooklogFolder3'),
     setting_booklog = require('../setting/setting_booklog');
 
 module.exports = (function () {
@@ -12,12 +12,10 @@ module.exports = (function () {
             basePath: setting_booklog.basePath,
             userId: setting_booklog.userId,
             defaultCount: 100
-         });
-
+        });
         return {
-            genFolder: bfc.genFolder,
-            genFolderAsync: bfc.genFolderAsync,
+            //genFolder: bfc.genFolder,
+            genFolderAsync: bfc.genFolderAsync
         };
     };
 }());
-
