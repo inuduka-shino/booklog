@@ -10,51 +10,18 @@ var httpAccess = require('./httpAccess'),
 module.exports = (function () {
     'use strict';
 
+    /*
     function message(s) {
         console.log(s);
     }
+    */
 
-    function makeBookLogFolders(infoFolders, bklogInfo) {
-        var iStruct = infoStruct(bklogInfo),
-            promises = [];
-
-        //message('booklogData');
-        if (iStruct.size() === 0) {
-            message('no enty!');
-            return;
-        }
-        iStruct.forEachBook(function (bookInfo) {
-            var infoFolder = infoFolders.infoFolder(bookInfo);
-
-            promises.push(new Promise(function (resolve, reject) {
-
-                infoFolder.exist({
-                    success: function (exist) {
-                        if (exist) {
-                            message('exist file:' + bookInfo.title);
-                            reject('exist file:' + bookInfo.title);
-                        } else {
-                            infoFolder.makeFolder({
-                                success: function () {
-                                    message('gen file:' + bookInfo.title);
-                                    resolve('gen file:' + bookInfo.title);
-                                },
-                                fail: function () {
-                                    message('gen file Error bookInfo Folder:' + bookInfo.title);
-                                    reject('gen file Error bookInfo Folder:' + bookInfo.title);
-                                }
-                            });
-                        }
-                    },
-                    fail: function () {
-                        message('file Access Error!:' + bookInfo.title);
-                    }
-                });
-            }));
-
-        }); // end of forEach
-
-        return Promise.all(promises);
+    function genError(message, subname) {
+        var err = new Error();
+        err.message = message;
+        err.name = 'bookLogFolderError';
+        err.subname = subname;
+        return err;
     }
 
     function getBookLogInfo(bklogAccess) {
@@ -64,6 +31,53 @@ module.exports = (function () {
                     resolve(bklogInfo);
                 });
         });
+    }
+
+    function makeBookLogFolders(infoFolders, bklogInfo) {
+        var iStruct = infoStruct(bklogInfo),
+            promises = [];
+
+        //message('booklogData');
+        if (iStruct.size() === 0) {
+            return Promise.resolve('no entry');
+        }
+        iStruct.forEachBook(function (bookInfo) {
+            var infoFolder = infoFolders.infoFolder(bookInfo);
+
+            promises.push(new Promise(function (resolve, reject) {
+
+                infoFolder.exist({
+                    success: function (exist) {
+                        if (exist) {
+                            //reject(genError('exist file', 'EXISTFILE'));
+                            resolve('exist folder:' + bookInfo.title);
+                        } else {
+                            infoFolder.makeFolder({
+                                success: function () {
+                                    resolve('gen folder:' + bookInfo.title);
+                                },
+                                fail: function () {
+                                    reject(genError(
+                                        'gen folder Error bookInfo Folder:' +
+                                            bookInfo.title,
+                                        'MAKE_FOLDER'
+                                    ));
+                                }
+                            });
+                        }
+                    },
+                    fail: function () {
+                        reject(genError(
+                            'file Access Error!:' + bookInfo.title,
+                            'ACCESS_FILE'
+                        ));
+                    }
+                });
+            }));
+
+        }); // end of forEach
+
+        return Promise.all(promises);
     }
 
     function genFolderAsync(infoFolders, bklogAccess, bklogAccessCount) {
