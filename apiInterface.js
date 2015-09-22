@@ -13,9 +13,10 @@ module.exports = (function () {
             userId: setting_booklog.userId,
             defaultCount: 100
         });
+
         return {
             //genFolder: bfc.genFolder,
-            genFolderAsync: bfc.genFolderAsync
+            genFolderAsync: bfc.genFolderAsync,
         };
     };
 }());
