@@ -12,12 +12,11 @@ module.exports = (function () {
             basePath: setting_booklog.basePath,
             userId: setting_booklog.userId,
             defaultCount: 100
-         });
+        });
 
         return {
-            genFolder: bfc.genFolder,
+            //genFolder: bfc.genFolder,
             genFolderAsync: bfc.genFolderAsync,
         };
     };
 }());
-

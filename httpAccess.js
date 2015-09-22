@@ -14,7 +14,7 @@
 
             req;
 
-        console.log('access to booklog api:' + 'http://' + booklogHost + ':' +urlPath);
+        //console.log('access to booklog api:' + 'http://' + booklogHost + ':' +urlPath);
         req = http.request(
             {
                 host: booklogHost,
